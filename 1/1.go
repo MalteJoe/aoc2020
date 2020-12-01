@@ -20,6 +20,21 @@ func FindProduct(input []uint64) uint64 {
 	return 0
 }
 
+func FindProductOfThree(input []uint64) uint64 {
+	for i := 0; i < len(input); i++ {
+		for j := 0; j < len(input); j++ {
+			for k := 0; k < len(input); k++ {
+				if input[i]+input[j]+input[k] == 2020 {
+					product := input[i] * input[j] * input[k]
+					log.Printf("Found match: %d + %d + %d = 2020; Product: %d", input[i], input[j], input[k], product)
+					return product
+				}
+			}
+		}
+	}
+	return 0
+}
+
 // https://adventofcode.com/2020/day/1
 func main() {
 	log.SetPrefix("01: ")
@@ -32,7 +47,7 @@ func main() {
 
 	log.Print(input)
 
-	answer := FindProduct(input)
+	answer := FindProductOfThree(input)
 
 	log.Printf("Answer: %d", answer)
 
