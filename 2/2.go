@@ -26,10 +26,14 @@ func PasswordValid(policy Policy, password string) bool {
 	return count <= policy.MaxOccurs && count >= policy.MinOccurs
 }
 
+func PasswordValid2(policy Policy, password string) bool {
+	return (policy.Character[0] == password[policy.MinOccurs-1]) != (policy.Character[0] == password[policy.MaxOccurs-1])
+}
+
 func countValidPasswords(inputs []passwordWithPolicy) uint {
 	var count uint = 0
 	for _, v := range inputs {
-		if PasswordValid(v.policy, v.password) {
+		if PasswordValid2(v.policy, v.password) {
 			count++
 		}
 	}
