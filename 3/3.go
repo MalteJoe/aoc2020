@@ -7,15 +7,27 @@ import (
 	"os"
 )
 
-func CountTrees(treemap [][]byte) int {
+type Slope struct {
+	X, Y int
+}
+
+func CountAndMultiplyForEachSlope(treemap [][]byte, slopes []Slope) int {
+	product := 1
+	for i := 0; i < len(slopes); i++ {
+		product *= CountTrees(treemap, slopes[i])
+	}
+	return product
+}
+
+func CountTrees(treemap [][]byte, slope Slope) int {
 	var count, x, y, i int = 0, 0, 0, 0
 	for y < len(treemap) {
 		if treemap[y][x] == '#' {
 			count++
 		}
 		i++
-		y = i
-		x = i * 3 % len(treemap[0])
+		y = i * slope.Y
+		x = i * slope.X % len(treemap[0])
 	}
 	return count
 }
@@ -52,7 +64,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	answer := CountTrees(input)
+	slopes := []Slope{
+		Slope{1, 1},
+		Slope{3, 1},
+		Slope{5, 1},
+		Slope{7, 1},
+		Slope{1, 2},
+	}
+
+	answer := CountAndMultiplyForEachSlope(input, slopes)
 
 	log.Printf("Answer: %d", answer)
 
