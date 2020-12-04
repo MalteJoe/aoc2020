@@ -7,12 +7,65 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 func hasKey(m map[string]string, key string) bool {
 	_, present := m[key]
 	return present
+}
+
+func isNumericInRange(input string, min int64, max int64) bool {
+	parsedInt, err := strconv.ParseInt(input, 10, 64)
+	if err != nil {
+		log.Printf("Not a number: %s", input)
+		return false
+	}
+	return parsedInt >= min && parsedInt <= max
+}
+
+func isValidHeight(input string) bool {
+	re := regexp.MustCompile("^(\\d+)(cm|in)$")
+	match := re.FindStringSubmatch(input)
+	if match == nil || len(match) != 3 {
+		log.Printf("Invalid Height: %s", input)
+		return false
+	}
+	value, _ := strconv.ParseInt(match[1], 10, 64)
+	if match[2] == "cm" {
+		return value >= 150 && value <= 193
+	}
+	return value >= 59 && value <= 76
+}
+
+func matchRegex(input string, regex string) bool {
+	match, err := regexp.MatchString(regex, input)
+	if err != nil {
+		log.Printf("Regex Error: %v, Regex: %s", err, regex)
+		return false
+	}
+	return match
+}
+
+func CountValidPassportsWithValidation(passports []map[string]string) (count int) {
+	count = 0
+	for _, passport := range passports {
+		isValid := true
+		isValid = isValid && isNumericInRange(passport["byr"], 1920, 2002)
+		isValid = isValid && isNumericInRange(passport["iyr"], 2010, 2020)
+		isValid = isValid && isNumericInRange(passport["eyr"], 2020, 2030)
+		isValid = isValid && isValidHeight(passport["hgt"])
+		isValid = isValid && matchRegex(passport["hcl"], "^#[0-9a-f]{6}$")
+		isValid = isValid && matchRegex(passport["ecl"], "^amb|blu|brn|gry|grn|hzl|oth$")
+		isValid = isValid && matchRegex(passport["pid"], "^\\d{9}$")
+		// hasAllRequiredKeys = hasAllRequiredKeys && hasKey(passport, "cid")
+		if isValid {
+			count++
+		}
+	}
+
+	return
 }
 
 func CountValidPassports(passports []map[string]string) (count int) {
@@ -80,7 +133,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	answer := CountValidPassports(input)
+	answer := CountValidPassportsWithValidation(input)
 
 	log.Printf("Answer: %d", answer)
 
