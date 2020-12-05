@@ -51,6 +51,7 @@ func ReadInput(input io.Reader) (result []Seat, err error) {
 	return
 }
 
+// Part 1
 func FindMaxId(seats []Seat) (max int) {
 	max = -1
 	for _, s := range seats {
@@ -60,6 +61,31 @@ func FindMaxId(seats []Seat) (max int) {
 		}
 	}
 	return
+}
+
+func contains(seats []Seat, seatID int) (contained bool) {
+	contained = false
+	for _, s := range seats {
+		if SeatId(s) == seatID {
+			contained = true
+			break
+		}
+	}
+	return
+}
+
+// Part 2
+func FindMissingSeatId(seats []Seat) int {
+	for row := 1; row < 127; row++ {
+		for col := 0; col < 8; col++ {
+			i := SeatId(Seat{row, col})
+
+			if !contains(seats, i) && contains(seats, i-1) && contains(seats, i+1) {
+				return i
+			}
+		}
+	}
+	return -1
 }
 
 // https://adventofcode.com/2020/day/5
@@ -80,7 +106,7 @@ func main() {
 
 	log.Printf("Input: %v", input)
 
-	answer := FindMaxId(input)
+	answer := FindMissingSeatId(input)
 
 	log.Printf("Answer: %d", answer)
 
