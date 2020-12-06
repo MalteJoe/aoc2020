@@ -60,3 +60,32 @@ b`
 	assertEquals(t, 1, len(parsed[3]))
 	assertEquals(t, 1, len(parsed[4]))
 }
+
+func TestMultipleGroups2(t *testing.T) {
+	input := `abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b`
+
+	parsed, err := ReadInput2(strings.NewReader(input))
+	assertNoError(t, err)
+	t.Logf("Parsed: %v", parsed)
+
+	assertEquals(t, 5, len(parsed))
+	assertEquals(t, 3, NumberOfTrueValues(parsed)[0])
+	assertEquals(t, 0, NumberOfTrueValues(parsed)[1])
+	assertEquals(t, 1, NumberOfTrueValues(parsed)[2])
+	assertEquals(t, 1, NumberOfTrueValues(parsed)[3])
+	assertEquals(t, 1, NumberOfTrueValues(parsed)[4])
+}
