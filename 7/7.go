@@ -65,13 +65,26 @@ func canContain(input Input, container string, search string) bool {
 
 }
 
-func Solve(input Input) (result int) {
+// How many bag colors can eventually contain at least one shiny gold bag?
+func Solve1(input Input) (result int) {
 	for bagColor := range input {
 		if canContain(input, bagColor, "shiny gold") {
 			result++
 		}
 	}
 	return
+}
+
+func countInnerBags(input Input, from string) (result int) {
+	for _, rule := range input[from] {
+		result += rule.Count + rule.Count*countInnerBags(input, rule.BagColor)
+	}
+	return
+}
+
+// How many individual bags are required inside your single shiny gold bag?
+func Solve2(input Input) (result int) {
+	return countInnerBags(input, "shiny gold")
 }
 
 // https://adventofcode.com/2020/day/7
@@ -92,8 +105,7 @@ func main() {
 
 	// log.Printf("Input: %v", input)
 
-	answer := Solve(input)
-
-	log.Printf("Answer: %v", answer)
+	log.Printf("Answer Part 1: %v", Solve1(input))
+	log.Printf("Answer Part 2: %v", Solve2(input))
 
 }
