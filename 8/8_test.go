@@ -52,19 +52,19 @@ acc +6`
 	assertIntEquals(t, 5, Solve1(parsed))
 }
 
-// func TestSolve2(t *testing.T) {
-// 	input := `nop +0
-// acc +1
-// jmp +4
-// acc +3
-// jmp -3
-// acc -99
-// acc +1
-// jmp -4
-// acc +6`
+func TestSolve2(t *testing.T) {
+	input := `nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6`
 
-// 	parsed, err := ReadInput(strings.NewReader(input))
-// 	assertNoError(t, err)
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
 
-// 	assertIntEquals(t, 32, Solve2(parsed))
-// }
+	assertIntEquals(t, 8, Solve2(parsed))
+}

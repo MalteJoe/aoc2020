@@ -72,14 +72,48 @@ func Solve1(input Input) (result int) {
 		case "jmp":
 			pc += input[pc].Arg
 		}
-
 	}
 
 	return
 }
 
-// TODO
+// Fix the program so that it terminates normally by
+// changing exactly one jmp (to nop) or nop (to jmp).
+// What is the value of the accumulator after the program terminates?
 func Solve2(input Input) (result int) {
+	acc := &result
+
+	for corruptedIdx := 0; corruptedIdx < len(input); corruptedIdx++ {
+		*acc = 0
+		pc := 0
+		visited := make(map[int]bool, 0)
+
+		for !visited[pc] && pc < len(input) {
+			visited[pc] = true
+			op := input[pc].Op
+			if corruptedIdx == pc {
+				if op == "nop" {
+					op = "jmp"
+				} else if op == "jmp" {
+					op = "nop"
+				}
+			}
+			switch op {
+			case "acc":
+				*acc += input[pc].Arg
+				pc++
+			case "nop":
+				pc++
+			case "jmp":
+				pc += input[pc].Arg
+			}
+		}
+		if !visited[pc] {
+			return
+		}
+	}
+
+	log.Fatal("No Solution")
 	return
 }
 
