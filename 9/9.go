@@ -10,9 +10,34 @@ import (
 
 // utils
 func sum(slice []int) (sum int) {
-	sum = 0
 	for _, v := range slice {
 		sum += v
+	}
+	return
+}
+
+func min(slice []int) (min int) {
+	if len(slice) == 0 {
+		log.Fatal("min of empty slice")
+	}
+	min = slice[0]
+	for _, v := range slice[1:] {
+		if v < min {
+			min = v
+		}
+	}
+	return
+}
+
+func max(slice []int) (min int) {
+	if len(slice) == 0 {
+		log.Fatal("max of empty slice")
+	}
+	min = slice[0]
+	for _, v := range slice[1:] {
+		if v > min {
+			min = v
+		}
 	}
 	return
 }
@@ -68,11 +93,21 @@ func Solve1(input Input, preambleLength int) (result int) {
 	return
 }
 
-// Fix the program so that it terminates normally by
-// changing exactly one jmp (to nop) or nop (to jmp).
-// What is the value of the accumulator after the program terminates?
+// In this list, adding up all of the numbers in a continuous range produces the invalid number from step 1.
+// Add together the smallest and largest number in this contiguous range.
+// What is the encryption weakness in your XMAS-encrypted list of numbers?
 func Solve2(input Input, preambleLength int) (result int) {
-	return Solve1(input, preambleLength)
+	targetSum := Solve1(input, preambleLength)
+	for lo := 0; lo < len(input)-1; lo++ {
+		for hi := lo + 1; hi < len(input); hi++ {
+			if sum(input[lo:hi]) == targetSum {
+				return min(input[lo:hi]) + max(input[lo:hi])
+			}
+		}
+	}
+
+	log.Fatal("No solution")
+	return
 }
 
 // https://adventofcode.com/2020/day/9

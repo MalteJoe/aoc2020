@@ -62,3 +62,31 @@ func TestSolve1(t *testing.T) {
 
 	assertIntEquals(t, 127, Solve1(parsed, 5))
 }
+
+func TestSolve2(t *testing.T) {
+	input := `35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	assertIntEquals(t, 62, Solve2(parsed, 5))
+}
