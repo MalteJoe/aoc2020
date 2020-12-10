@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -17,12 +18,16 @@ func sum(slice []int) (sum int) {
 }
 
 func contains(slice []int, value int) bool {
-	for _, v := range slice {
+	return indexOf(slice, value) != -1
+}
+
+func indexOf(slice []int, value int) int {
+	for i, v := range slice {
 		if v == value {
-			return true
+			return i
 		}
 	}
-	return false
+	return -1
 }
 
 func min(slice []int) (min int) {
@@ -104,11 +109,32 @@ func Solve1(input Input) (result int) {
 
 }
 
-func Solve2(input Input) (result int) {
-	return Solve1(input)
-
-	log.Fatal("No solution")
+func countArrangements(from int, adapters []int, knownArrangements map[int]int) (result int) {
+	known, p := knownArrangements[from]
+	if p {
+		return known
+	}
+	if len(adapters) == 0 {
+		return 1
+	}
+	for i := 1; i < 4; i++ {
+		adapterIdx := indexOf(adapters, from+i)
+		if adapterIdx != -1 {
+			remainingAdapters := make([]int, 0)
+			copy(remainingAdapters, adapters[:adapterIdx])
+			remainingAdapters = append(remainingAdapters, adapters[adapterIdx+1:]...)
+			result += countArrangements(from+i, remainingAdapters, knownArrangements)
+		}
+	}
+	knownArrangements[from] = result
 	return
+}
+
+// What is the total number of distinct ways you can arrange the adapters
+// to connect the charging outlet to your device?
+func Solve2(input Input) (result int) {
+	sort.Ints(input)
+	return countArrangements(0, input, make(map[int]int, 0))
 }
 
 // https://adventofcode.com/2020/day/10
