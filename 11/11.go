@@ -70,8 +70,6 @@ func round(input *Input) (seatsChanged bool) {
 		}
 	}
 
-	printMap(output)
-
 	*input = output
 	return
 }
@@ -95,10 +93,67 @@ func Solve1(input Input) (result int) {
 	return countOccupied(input)
 }
 
-// What is the total number of distinct ways you can arrange the adapters
-// to connect the charging outlet to your device?
+// Given the new visibility method and the rule change for occupied seats becoming empty,
+// once equilibrium is reached, how many seats end up occupied?
 func Solve2(input Input) (result int) {
-	return Solve1(input)
+	for roundPt2(&input) {
+	}
+	return countOccupied(input)
+}
+
+func visibleOccupiedSeats(input Input, row, col int) (count int) {
+	for xDir := -1; xDir <= 1; xDir++ {
+		for yDir := -1; yDir <= 1; yDir++ {
+			if xDir == 0 && yDir == 0 {
+				continue
+			}
+			seatFound := false
+			endOfMap := false
+			distance := 1
+			for !seatFound && !endOfMap {
+				checkRow := row + distance*xDir
+				checkCol := col + distance*yDir
+				endOfMap = checkRow < 0 || checkRow >= len(input) || checkCol < 0 || checkCol >= len(input[checkRow])
+				if !endOfMap {
+					if input[checkRow][checkCol] != '.' {
+						seatFound = true
+						if input[checkRow][checkCol] == '#' {
+							count++
+						}
+					} else {
+						distance++
+					}
+				}
+			}
+
+		}
+	}
+	return
+}
+
+func roundPt2(input *Input) (seatsChanged bool) {
+	output := make([][]byte, len(*input))
+	for row := range *input {
+		output[row] = make([]byte, len((*input)[row]))
+		for col := range (*input)[row] {
+			output[row][col] = (*input)[row][col]
+			switch (*input)[row][col] {
+			case 'L':
+				if visibleOccupiedSeats(*input, row, col) == 0 {
+					seatsChanged = true
+					output[row][col] = '#'
+				}
+			case '#':
+				if visibleOccupiedSeats(*input, row, col) >= 5 {
+					seatsChanged = true
+					output[row][col] = 'L'
+				}
+			}
+		}
+	}
+
+	*input = output
+	return
 }
 
 // https://adventofcode.com/2020/day/11
