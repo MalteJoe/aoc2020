@@ -19,6 +19,19 @@ F11`
 	assertIntEquals(t, 25, Part1(parsed))
 }
 
+func TestSolve2(t *testing.T) {
+	input := `F10
+N3
+F7
+R90
+F11`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	assertIntEquals(t, 286, Part2(parsed))
+}
+
 // Helper
 func assertTrue(t *testing.T, b bool) {
 	t.Helper()

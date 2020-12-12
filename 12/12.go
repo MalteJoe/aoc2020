@@ -71,9 +71,38 @@ func Part1(input Input) (result int) {
 	return abs(position.X) + abs(position.Y)
 }
 
-// TODO
 func Part2(input Input) (result int) {
-	return -1
+	waypoint := Vector{10, 1}
+	position := Vector{0, 0}
+	for _, a := range input {
+		switch a.Type {
+		case 'N':
+			waypoint.Y += a.Value
+		case 'S':
+			waypoint.Y -= a.Value
+		case 'E':
+			waypoint.X += a.Value
+		case 'W':
+			waypoint.X -= a.Value
+		case 'L':
+			waypoint = rotate(waypoint, 360-a.Value)
+		case 'R':
+			waypoint = rotate(waypoint, a.Value)
+		case 'F':
+			movement := Vector{waypoint.X * a.Value, waypoint.Y * a.Value}
+			position.X += movement.X
+			position.Y += movement.Y
+		}
+	}
+	return abs(position.X) + abs(position.Y)
+}
+
+func rotate(vec Vector, deg int) (rotated Vector) {
+	rotated = Vector{vec.X, vec.Y}
+	for i := 0; i*90 < deg; i++ {
+		rotated = Vector{rotated.Y, -rotated.X}
+	}
+	return
 }
 
 // https://adventofcode.com/2020/day/11
