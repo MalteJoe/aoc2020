@@ -6,7 +6,7 @@ import (
 )
 
 // Tests
-func TestSolve1(t *testing.T) {
+func TestPart1(t *testing.T) {
 	input := `939
 7,13,x,x,59,x,31,19`
 
@@ -14,6 +14,25 @@ func TestSolve1(t *testing.T) {
 	assertNoError(t, err)
 
 	assertIntEquals(t, 295, Part1(parsed))
+}
+
+func TestPart2(t *testing.T) {
+	input := `939
+7,13,x,x,59,x,31,19`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	assertIntEquals(t, 1068781, Part2(parsed))
+}
+
+func TestPart2Examples(t *testing.T) {
+	x := -1
+	assertIntEquals(t, 3417, Part2(Input{0, []int{17, x, 13, 19}}))
+	assertIntEquals(t, 754018, Part2(Input{0, []int{67, 7, 59, 61}}))
+	assertIntEquals(t, 779210, Part2(Input{0, []int{67, x, 7, 59, 61}}))
+	assertIntEquals(t, 1261476, Part2(Input{0, []int{67, 7, x, 59, 61}}))
+	assertIntEquals(t, 1202161486, Part2(Input{0, []int{1789, 37, 47, 1889}}))
 }
 
 // Helper

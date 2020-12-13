@@ -58,14 +58,32 @@ func Part1(input Input) (result int) {
 	return bestBus * waitTimes[bestBus]
 }
 
+// What is the earliest timestamp such that all of the listed bus IDs
+// depart at offsets matching their positions in the list?
 func Part2(input Input) (result int) {
-	return -1
+	lowestFreq := max(input.BusIDs)
+	offset := indexOf(input.BusIDs, lowestFreq)
+	for i := 1; ; i++ {
+		t := lowestFreq*i - offset
+		if valid(input, t) {
+			return t
+		}
+	}
+}
+
+func valid(input Input, t int) bool {
+	for j, busID := range input.BusIDs {
+		if busID != -1 && 0 != (t+j)%busID {
+			return false
+		}
+	}
+	return true
 }
 
 // https://adventofcode.com/2020/day/13
 func main() {
 	log.SetPrefix("13: ")
-	log.SetFlags(0)
+	log.SetFlags(log.Ltime)
 
 	file, err := os.Open("./input")
 	if err != nil {
