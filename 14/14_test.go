@@ -18,6 +18,19 @@ mem[8] = 0`
 	assertIntEquals(t, 165, Part1(parsed))
 }
 
+// Tests
+func TestPart2(t *testing.T) {
+	input := `mask = 000000000000000000000000000000X1001X
+mem[42] = 100
+mask = 00000000000000000000000000000000X0XX
+mem[26] = 1`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	assertIntEquals(t, 208, Part2(parsed))
+}
+
 // Helper
 func assertTrue(t *testing.T, b bool) {
 	t.Helper()

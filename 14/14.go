@@ -55,9 +55,36 @@ func Part1(input Input) (result int) {
 	return
 }
 
-// TODO
+// Execute the initialization program using an emulator for a version 2 decoder chip.
+// What is the sum of all values left in memory after it completes?
 func Part2(input Input) (result int) {
-	return -1
+	mem := make(map[uint64]uint64)
+	var mask string
+	for _, cmd := range input {
+		if cmd.Lvalue == "mask" {
+			mask = cmd.RValue
+		} else {
+			addr, _ := strconv.ParseUint(cmd.Lvalue[4:len(cmd.Lvalue)-1], 10, 36)
+			value, _ := strconv.ParseUint(cmd.RValue, 10, 36)
+			for _, masked := range addresses(addr, mask) {
+				mem[masked] = value
+			}
+		}
+	}
+	for _, v := range mem {
+		result += int(v)
+	}
+	return
+}
+
+func addresses(addr uint64, mask string) (result []uint64) {
+	if !strings.Contains(mask, "X") {
+		single, _ := strconv.ParseUint(mask, 2, 36)
+		return []uint64{addr | single}
+	}
+	result = addresses(addr, strings.Replace(mask, "X", "1", 1))
+	result = append(result, addresses(addr&^(1<<(35-strings.Index(mask, "X"))), strings.Replace(mask, "X", "0", 1))...)
+	return
 }
 
 // https://adventofcode.com/2020/day/14
