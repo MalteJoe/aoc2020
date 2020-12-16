@@ -26,6 +26,27 @@ nearby tickets:
 	assertIntEquals(t, 71, Part1(parsed))
 }
 
+func TestPart2(t *testing.T) {
+	input := `class: 1-3 or 5-7
+row: 6-11 or 33-44
+seat: 13-40 or 45-50
+
+your ticket:
+7,1,14
+
+nearby tickets:
+7,3,47
+40,4,50
+55,2,20
+38,6,12`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	// different names of fields
+	assertIntEquals(t, 0, Part2(parsed))
+}
+
 // Helper
 func assertTrue(t *testing.T, b bool) {
 	t.Helper()
