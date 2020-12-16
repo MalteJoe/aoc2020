@@ -28,16 +28,31 @@ func Part1(input Input) (result int) {
 	return lastNumber
 }
 
-// Execute the initialization program using an emulator for a version 2 decoder chip.
-// What is the sum of all values left in memory after it completes?
+// Given your starting numbers, what will be the 30000000th number spoken?
 func Part2(input Input) (result int) {
-	return
+	spokenNumbers := make(map[int]int)
+	for turn, startingNumber := range input[:len(input)-1] {
+		spokenNumbers[startingNumber] = turn + 1
+	}
+
+	lastNumber := input[len(input)-1]
+	for turn := len(input); turn < 30_000_000; turn++ {
+		lastSpoken, wasSpoken := spokenNumbers[lastNumber]
+		spokenNumbers[lastNumber] = turn
+		if !wasSpoken {
+			lastNumber = 0
+		} else {
+			lastNumber = turn - lastSpoken
+		}
+	}
+	return lastNumber
 }
 
 // https://adventofcode.com/2020/day/15
 func main() {
-	log.Printf("Answer Part 1: %v", Part1([]int{2, 0, 6, 12, 1, 3}))
-	//log.Printf("Answer Part 2: %v", Part2(input))
+	input := []int{2, 0, 6, 12, 1, 3}
+	log.Printf("Answer Part 1: %v", Part1(input))
+	log.Printf("Answer Part 2: %v", Part2(input))
 }
 
 // utils

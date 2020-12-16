@@ -15,6 +15,16 @@ func TestPart1(t *testing.T) {
 	assertIntEquals(t, 1836, Part1([]int{3, 1, 2}))
 }
 
+func TestPart2(t *testing.T) {
+	assertIntEquals(t, 175594, Part2([]int{0, 3, 6}))
+	assertIntEquals(t, 2578, Part2([]int{1, 3, 2}))
+	assertIntEquals(t, 3544142, Part2([]int{2, 1, 3}))
+	assertIntEquals(t, 261214, Part2([]int{1, 2, 3}))
+	assertIntEquals(t, 6895259, Part2([]int{2, 3, 1}))
+	assertIntEquals(t, 18, Part2([]int{3, 2, 1}))
+	assertIntEquals(t, 362, Part2([]int{3, 1, 2}))
+}
+
 // Helper
 func assertTrue(t *testing.T, b bool) {
 	t.Helper()
