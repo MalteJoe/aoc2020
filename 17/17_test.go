@@ -17,6 +17,17 @@ func TestPart1(t *testing.T) {
 	assertIntEquals(t, 112, Part1(parsed))
 }
 
+func TestPart2(t *testing.T) {
+	input := `.#.
+..#
+###`
+
+	parsed, err := ReadInput(strings.NewReader(input))
+	assertNoError(t, err)
+
+	assertIntEquals(t, 848, Part2(parsed))
+}
+
 // Helper
 func assertTrue(t *testing.T, b bool) {
 	t.Helper()

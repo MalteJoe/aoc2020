@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"time"
 )
 
 type Input [][]byte
@@ -13,9 +14,15 @@ type Cube struct {
 	X, Y, Z int
 }
 
+type Hypercube struct {
+	X, Y, Z, W int
+}
+
 type void struct{}
 
 type PocketDim map[Cube]void
+
+type HyperDim map[Hypercube]void
 
 func ReadInput(input io.Reader) (result Input, err error) {
 	scanner := bufio.NewScanner(input)
@@ -77,9 +84,52 @@ func simulate(dim PocketDim) PocketDim {
 	return newDim
 }
 
-// TODO
+// Starting with your given initial configuration,
+// simulate six cycles in a 4-dimensional space.
+// How many cubes are left in the active state after the sixth cycle?
 func Part2(input Input) (result int) {
-	return -1
+	pocketDim := make(HyperDim)
+	for x := range input {
+		for y := range input[x] {
+			if input[x][y] == '#' {
+				pocketDim[Hypercube{x, y, 0, 0}] = void{}
+			}
+		}
+	}
+
+	for i := 1; i <= 6; i++ {
+		pocketDim = simulate4D(pocketDim)
+	}
+	return len(pocketDim)
+}
+
+func simulate4D(dim HyperDim) HyperDim {
+	activeNeighbours := make(map[Hypercube]byte)
+	for cube := range dim {
+		for x := cube.X - 1; x <= cube.X+1; x++ {
+			for y := cube.Y - 1; y <= cube.Y+1; y++ {
+				for z := cube.Z - 1; z <= cube.Z+1; z++ {
+					for w := cube.W - 1; w <= cube.W+1; w++ {
+						if x == cube.X && y == cube.Y && z == cube.Z && w == cube.W {
+							continue
+						}
+						activeNeighbours[Hypercube{x, y, z, w}]++
+					}
+				}
+			}
+		}
+	}
+
+	newDim := make(HyperDim)
+	for cube, activeNeighbourCount := range activeNeighbours {
+		_, active := dim[cube]
+		if active && activeNeighbourCount >= 2 && activeNeighbourCount <= 3 ||
+			!active && activeNeighbourCount == 3 {
+			newDim[cube] = void{}
+		}
+	}
+
+	return newDim
 }
 
 // https://adventofcode.com/2020/day/17
@@ -97,6 +147,8 @@ func main() {
 
 	log.Printf("Input: %v", input)
 
-	log.Printf("Answer Part 1: %v", Part1(input))
-	log.Printf("Answer Part 2: %v", Part2(input))
+	start := time.Now()
+	log.Printf("Answer Part 1: %v (took %s)", Part1(input), time.Since(start))
+	start = time.Now()
+	log.Printf("Answer Part 2: %v (took %s)", Part2(input), time.Since(start))
 }
